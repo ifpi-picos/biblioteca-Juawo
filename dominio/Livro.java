@@ -1,21 +1,19 @@
 package dominio;
-import java.time.LocalDate;
 
 public class Livro {
     private String autor;
     private String titulo;
     private String editora;
-    private LocalDate ano;
+    private int ano;
     private boolean isEmprestado;
-    
-    public Livro(String autor, String titulo, String editora, LocalDate ano, boolean isEmprestado) {
+
+    public Livro(String autor, String titulo, String editora, int ano) {
         this.autor = autor;
         this.titulo = titulo;
         this.editora = editora;
         this.ano = ano;
-        this.isEmprestado = isEmprestado;
     }
-    
+
     public String getAutor() {
         return autor;
     }
@@ -39,19 +37,19 @@ public class Livro {
     public void setEditora(String editora) {
         this.editora = editora;
     }
-    
-    public LocalDate getAno() {
+
+    public int getAno() {
         return ano;
     }
 
-    public void setAno(LocalDate ano) {
+    public void setAno(int ano) {
         this.ano = ano;
     }
 
     public boolean isEmprestado() {
         return isEmprestado;
     }
-    
+
     public void setEmprestado(boolean isEmprestado) {
         this.isEmprestado = isEmprestado;
     }
