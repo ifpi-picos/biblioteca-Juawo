@@ -7,9 +7,9 @@ public class Livro {
     private int ano;
     private boolean isEmprestado;
 
-    public Livro(String autor, String titulo, String editora, int ano) {
-        this.autor = autor;
+    public Livro(String titulo, String autor, String editora, int ano) {
         this.titulo = titulo;
+        this.autor = autor;
         this.editora = editora;
         this.ano = ano;
     }

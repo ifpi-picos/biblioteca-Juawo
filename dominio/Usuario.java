@@ -56,7 +56,7 @@ public class Usuario {
     }
 
     public void listarHistoricoEmprestimos(){
-        System.out.println("Histórico de Empréstimos do usuário " + this.nome);
+        System.out.println(" -- Histórico de Empréstimos do usuário " + this.nome);
         for (Emprestimo emprestimo : historicoEmprestimos) {
             System.out.println("Título do Livro Emprestado -- " + emprestimo.getTituloLivroEmprestado());
             System.out.println("   - Data do Empréstimo -- " + emprestimo.getDataEmprestimo());
