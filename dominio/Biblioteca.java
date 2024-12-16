@@ -67,4 +67,12 @@ public class Biblioteca {
             return false;
         }
     }
+    
+    public boolean validarLivro(Livro livro){
+        if (livrosCadastrados.contains(livro)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
