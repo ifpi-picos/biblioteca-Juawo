@@ -41,6 +41,11 @@ public class Emprestimo {
             return;
         }
 
+        if (livroAssociado.isEmprestado()) {
+            System.out.println("Este livro já está emprestado!");
+            return;
+        }
+
         this.tituloLivroEmprestado = livroAssociado.getTitulo();
 
         livroAssociado.setEmprestado(true);

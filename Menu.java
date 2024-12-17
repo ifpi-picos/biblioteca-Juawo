@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 import dominio.Biblioteca;
+import dominio.Emprestimo;
 import dominio.Livro;
 import dominio.Usuario;
 
@@ -17,10 +18,10 @@ public class Menu {
                 "\n 1 - Cadastrar Usuário \n 2 - Cadastrar Livro \n 3 - Listar todos os Livros \n 4 - Listar Livros Emprestados e Disponíveis \n 5 - Listar Histórico de Empréstimo de Usuário \n 6 - Realizar Empréstimo de Livro \n 7 - Devolver Livro Emprestado \n 0 - Sair");
     }
 
-    public void iniciarMenu(){
+    public void iniciarMenu() {
         boolean isLoop = true;
         Scanner scanner = new Scanner(System.in);
-        
+
         while (isLoop) {
             menuText();
             System.out.println("Escolha uma opção : ");
@@ -44,13 +45,13 @@ public class Menu {
 
                 case 2:
                     System.out.println("Digite o titulo do Livro : ");
-                    String tituloLivro = scanner.nextLine();
+                    String tituloLivro = scanner.next();
 
                     System.out.println("Digite o nome do Autor : ");
-                    String nomeAutor = scanner.nextLine();
+                    String nomeAutor = scanner.next();
 
                     System.out.println("Digite o nome da Editora : ");
-                    String nomeEditora = scanner.nextLine();
+                    String nomeEditora = scanner.next();
 
                     System.out.println("Digite o Ano de Publicação : ");
                     int anoPublicacao = scanner.nextInt();
@@ -66,13 +67,48 @@ public class Menu {
                     break;
                 case 5:
                     // Sistema de Senha pra verificar o usuário
-
+                    System.out.println("Digite o CPF do usuário:");
+                    String cpfPesquisadoHistorico = scanner.next();
+                    Usuario userHistorico = biblioteca.pesquisarUsuarioCpf(cpfPesquisadoHistorico);
+                    userHistorico.listarHistoricoEmprestimos();
                     break;
                 case 6:
-                    // Sistema de busca por Chave para escolher o usuário e poder realizar o empréstimo no nome dele
+                    // Sistema de busca por Chave para escolher o usuário e poder realizar o
+                    // empréstimo no nome dele
+                    System.out.println("Digite o  título do livro que deseja pegar emprestado : ");
+                    String tituloPesquisa = scanner.next();
+                    Livro livroPesquisado = biblioteca.pesquisarLivroTitulo(tituloPesquisa);
+                    System.out.println("Digite o CPF do usuário:");
+                    String cpfPesquisadoEmprestimo = scanner.next();
+                    Usuario userEmprestimo = biblioteca.pesquisarUsuarioCpf(cpfPesquisadoEmprestimo);
+                    Emprestimo emprestimo = new Emprestimo(biblioteca);
+                    if (userEmprestimo == null) {
+                        System.out.println("User Null");
+                        break;
+                    }
+                    if (livroPesquisado == null) {
+                        System.out.println("Livro Null");
+                        break;
+                    }
+                    emprestimo.realizarEmprestimo(userEmprestimo, livroPesquisado);
                     break;
                 case 7:
-                     // Sistema de busca por Chave para escolher o usuário e poder realizar a devolução no nome dele
+                    // Sistema de busca por Chave para escolher o usuário e poder realizar a
+                    // devolução no nome dele
+                    System.out.println("Digite o  título do livro que deseja pegar emprestado : ");
+                    String tituloPesquisaDevolucao = scanner.next();
+                    Livro livroPesquisadoDevolucao = biblioteca.pesquisarLivroTitulo(tituloPesquisaDevolucao);
+                    System.out.println("Digite o CPF do usuário:");
+                    String cpfPesquisadoDevolucao = scanner.next();
+                    Usuario userDevolucao = biblioteca.pesquisarUsuarioCpf(cpfPesquisadoDevolucao);
+                    Emprestimo devolucao = new Emprestimo(biblioteca);
+                    if (userDevolucao == null) {
+                        return;
+                    }
+                    if (livroPesquisadoDevolucao == null) {
+                        return;
+                    }
+                    devolucao.devolverEmprestimo(userDevolucao, livroPesquisadoDevolucao);
                     break;
                 case 0:
                     System.out.println("Obrigado por usar nosso sistema!");
