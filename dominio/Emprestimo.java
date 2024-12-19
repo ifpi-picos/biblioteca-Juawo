@@ -3,17 +3,19 @@ package dominio;
 import java.time.LocalDate;
 
 public class Emprestimo {
+    private Usuario usuario;
+    private Livro livro;
     private LocalDate dataEmprestimo;
     private LocalDate dataDevolucao;
     private Biblioteca biblioteca;
-    private String tituloLivroEmprestado;
 
     
-    public Emprestimo(Biblioteca biblioteca) {
+    public Emprestimo(Biblioteca biblioteca, Usuario usuario, Livro livro) {
+        this.usuario = usuario;
+        this.livro = livro;
         this.dataEmprestimo = LocalDate.now();
         this.dataDevolucao = dataEmprestimo.plusDays(7);
         this.biblioteca = biblioteca;
-        this.tituloLivroEmprestado = null;
     }
     
     public LocalDate getDataEmprestimo() {
@@ -24,46 +26,46 @@ public class Emprestimo {
         return dataDevolucao;
     }
     public String getTituloLivroEmprestado() {
-        return tituloLivroEmprestado;
-    }
-        
-    public void setTituloLivroEmprestado(String tituloLivroEmprestado) {
-        this.tituloLivroEmprestado = tituloLivroEmprestado;
+        return livro.getTitulo();
     }
 
-    public void realizarEmprestimo(Usuario usuarioAssociado, Livro livroAssociado) {
-        if(!biblioteca.validarUsuario(usuarioAssociado)){
+    public void realizarEmprestimo() {
+        if(!biblioteca.validarUsuario(usuario)){
             System.out.println("Usuário não encontrado");
             return;
         }
-        if(!biblioteca.validarLivro(livroAssociado)){
+        if(!biblioteca.validarLivro(livro)){
             System.out.println("Livro não encontrado");
             return;
         }
 
-        if (livroAssociado.isEmprestado()) {
+        if (livro.isEmprestado()) {
             System.out.println("Este livro já está emprestado!");
             return;
         }
 
-        this.tituloLivroEmprestado = livroAssociado.getTitulo();
 
-        livroAssociado.setEmprestado(true);
-        usuarioAssociado.addEmprestimoHistorico(this);
-        System.out.println("Empréstimo realizado com sucesso do livro : " + livroAssociado.getTitulo());
+        livro.setEmprestado(true);
+        usuario.addEmprestimoHistorico(this);
+        System.out.println("Empréstimo realizado com sucesso do livro : " + livro.getTitulo());
     }
 
-    public void devolverEmprestimo(Usuario usuarioAssociado, Livro livroAssociado){
-        if (!biblioteca.validarUsuario(usuarioAssociado)) {
+    public void devolverEmprestimo(){
+        if (!biblioteca.validarUsuario(usuario)) {
             System.out.println("Usuário não Encontrado");
             return;
         }
-        if (!biblioteca.validarLivro(livroAssociado)) {
+        if (!biblioteca.validarLivro(livro)) {
             System.out.println("Livro não Encontrado");
             return;
         }
         
-        livroAssociado.setEmprestado(false);
-        System.out.println("Devolução feita com sucesso do livro : " + livroAssociado.getTitulo());
+        if (!livro.isEmprestado()) {
+            System.out.println("Este livro não está emprestado");
+            return;
+        }
+        
+        livro.setEmprestado(false);
+        System.out.println("Devolução feita com sucesso do livro : " + livro.getTitulo());
     }
 }

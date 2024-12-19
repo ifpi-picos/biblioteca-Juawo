@@ -81,7 +81,6 @@ public class Menu {
                     System.out.println("Digite o CPF do usuário:");
                     String cpfPesquisadoEmprestimo = scanner.next();
                     Usuario userEmprestimo = biblioteca.pesquisarUsuarioCpf(cpfPesquisadoEmprestimo);
-                    Emprestimo emprestimo = new Emprestimo(biblioteca);
                     if (userEmprestimo == null) {
                         System.out.println("User Null");
                         break;
@@ -90,7 +89,8 @@ public class Menu {
                         System.out.println("Livro Null");
                         break;
                     }
-                    emprestimo.realizarEmprestimo(userEmprestimo, livroPesquisado);
+                    Emprestimo emprestimo = new Emprestimo(biblioteca,userEmprestimo, livroPesquisado);
+                    emprestimo.realizarEmprestimo();
                     break;
                 case 7:
                     // Sistema de busca por Chave para escolher o usuário e poder realizar a
@@ -101,14 +101,14 @@ public class Menu {
                     System.out.println("Digite o CPF do usuário:");
                     String cpfPesquisadoDevolucao = scanner.next();
                     Usuario userDevolucao = biblioteca.pesquisarUsuarioCpf(cpfPesquisadoDevolucao);
-                    Emprestimo devolucao = new Emprestimo(biblioteca);
                     if (userDevolucao == null) {
                         return;
                     }
                     if (livroPesquisadoDevolucao == null) {
                         return;
                     }
-                    devolucao.devolverEmprestimo(userDevolucao, livroPesquisadoDevolucao);
+                    Emprestimo devolucao = new Emprestimo(biblioteca,userDevolucao,livroPesquisadoDevolucao);
+                    devolucao.devolverEmprestimo();
                     break;
                 case 0:
                     System.out.println("Obrigado por usar nosso sistema!");
