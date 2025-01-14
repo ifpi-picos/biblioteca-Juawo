@@ -79,22 +79,22 @@ public class Biblioteca {
     public Usuario pesquisarUsuarioCpf(String cpf){
         for (Usuario usuario : usuariosCadastrados){
             if (cpf.equals(usuario.getCpf())) {
-                System.out.println("Livro encontrado.");
+                System.out.println("Usuário encontrado. \n");
                 return usuario;
             }
         }
-        System.out.println("Usuário não encontrado.");
+        System.out.println("Usuário não encontrado. \n");
         return null;
     }
 
     public Livro pesquisarLivroTitulo(String tituloLivro){
         for (Livro livro : livrosCadastrados) {
             if (tituloLivro.equalsIgnoreCase(livro.getTitulo())) {
-                System.out.println("Livro encontrado.");
+                System.out.println("Livro encontrado. \n");
                 return livro;
             } 
         }
-        System.out.println("Livro não encontrado.");
+        System.out.println("Livro não encontrado. \n");
         return null;
     }
 }

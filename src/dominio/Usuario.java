@@ -55,12 +55,13 @@ public class Usuario {
         historicoEmprestimos.add(novEmprestimo);
     }
 
-    public void listarHistoricoEmprestimos(){
+    public void listarHistoricoEmprestimos() {
         System.out.println(" -- Histórico de Empréstimos do usuário " + this.nome);
         for (Emprestimo emprestimo : historicoEmprestimos) {
             System.out.println("Título do Livro Emprestado -- " + emprestimo.getTituloLivroEmprestado());
             System.out.println("   - Data do Empréstimo -- " + emprestimo.getDataEmprestimo());
             System.out.println("   - Data de Devolução -- " + emprestimo.getDataDevolucao());
+            System.out.println(" \n");
         }
     }
 

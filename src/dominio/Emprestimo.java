@@ -2,6 +2,9 @@ package dominio;
 
 import java.time.LocalDate;
 
+import dominio.Notificacao.INotificacao;
+import dominio.Notificacao.NotificaoEmail;
+
 public class Emprestimo {
     private Usuario usuario;
     private Livro livro;
@@ -31,11 +34,11 @@ public class Emprestimo {
 
     public void realizarEmprestimo() {
         if(!biblioteca.validarUsuario(usuario)){
-            System.out.println("Usuário não encontrado");
+            System.out.println("Usuário não encontrado para realizar o emprestimo");
             return;
         }
         if(!biblioteca.validarLivro(livro)){
-            System.out.println("Livro não encontrado");
+            System.out.println("Livro não encontrado para realizar o emprestimo");
             return;
         }
 
@@ -47,7 +50,9 @@ public class Emprestimo {
 
         livro.setEmprestado(true);
         usuario.addEmprestimoHistorico(this);
-        System.out.println("Empréstimo realizado com sucesso do livro : " + livro.getTitulo());
+        INotificacao notificacao = new NotificaoEmail();
+        String texto = "Empréstimo do livro : " + livro.getTitulo() + " realizado com sucesso";
+        notificacao.enviarNotificacao(texto,usuario);
     }
 
     public void devolverEmprestimo(){
