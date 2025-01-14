@@ -51,10 +51,10 @@ public class Emprestimo {
         livro.setEmprestado(true);
         usuario.addEmprestimoHistorico(this);
         INotificacao notificacao = new NotificaoEmail();
-        String texto = "Empréstimo do livro : " + livro.getTitulo() + " realizado com sucesso";
+        String texto = "Empréstimo do livro : " + livro.getTitulo() + " realizado com sucesso" + "Data de devolução : " + this.dataDevolucao;
         notificacao.enviarNotificacao(texto,usuario);
     }
-
+    
     public void devolverEmprestimo(){
         if (!biblioteca.validarUsuario(usuario)) {
             System.out.println("Usuário não Encontrado");
@@ -71,6 +71,8 @@ public class Emprestimo {
         }
         
         livro.setEmprestado(false);
-        System.out.println("Devolução feita com sucesso do livro : " + livro.getTitulo());
+        String texto = "Devolução do livro : " + livro.getTitulo() + " realizado com sucesso!";
+        INotificacao notificacao = new NotificaoEmail();
+        notificacao.enviarNotificacao(texto,usuario);
     }
 }

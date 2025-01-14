@@ -3,6 +3,9 @@ package dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+import dominio.Notificacao.INotificacao;
+import dominio.Notificacao.NotificaoEmail;
+
 public class Biblioteca {
     private List<Livro> livrosCadastrados;
     private List<Usuario> usuariosCadastrados;
@@ -34,7 +37,8 @@ public class Biblioteca {
     }
 
     public void cadastrarUsuario(Usuario novoUsario) {
-        System.out.println("Usuário cadastrado : " + novoUsario.getNome());
+        INotificacao notificacao = new NotificaoEmail();
+        notificacao.enviarNotificacao("Usuário cadastrado com sucesso!", novoUsario);
         this.usuariosCadastrados.add(novoUsario);
     }
 

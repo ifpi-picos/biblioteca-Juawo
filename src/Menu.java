@@ -40,7 +40,6 @@ public class Menu {
                     Usuario usuario = new Usuario(nome, cpf, email);
                     biblioteca.cadastrarUsuario(usuario);
 
-                    System.out.println("Usuário cadastrado com sucesso!");
                     break;
 
                 case 2:
