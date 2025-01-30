@@ -1,6 +1,7 @@
 package com.biblioteca;
 import com.biblioteca.dominio.Biblioteca;
 import com.biblioteca.dominio.Livro;
+import com.biblioteca.dominio.Menu;
 import com.biblioteca.dominio.Usuario;
 
 public class App {
