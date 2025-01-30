@@ -1,6 +1,6 @@
-package dominio.Notificacao;
+package com.biblioteca.dominio.Notificacao;
 
-import dominio.Usuario;
+import com.biblioteca.dominio.Usuario;
 
 public class NotificaoEmail implements INotificacao{
     @Override

@@ -1,4 +1,4 @@
-package dominio;
+package com.biblioteca.dominio;
 
 public class Livro {
     private String autor;

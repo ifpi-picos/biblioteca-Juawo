@@ -1,10 +1,10 @@
-package dominio;
+package com.biblioteca.dominio;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import dominio.Notificacao.INotificacao;
-import dominio.Notificacao.NotificaoEmail;
+import com.biblioteca.dominio.Notificacao.INotificacao;
+import com.biblioteca.dominio.Notificacao.NotificaoEmail;
 
 public class Biblioteca {
     private List<Livro> livrosCadastrados;

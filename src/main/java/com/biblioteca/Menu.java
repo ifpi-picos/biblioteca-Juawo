@@ -1,9 +1,10 @@
+package com.biblioteca;
 import java.util.Scanner;
 
-import dominio.Biblioteca;
-import dominio.Emprestimo;
-import dominio.Livro;
-import dominio.Usuario;
+import com.biblioteca.dominio.Biblioteca;
+import com.biblioteca.dominio.Emprestimo;
+import com.biblioteca.dominio.Livro;
+import com.biblioteca.dominio.Usuario;
 
 public class Menu {
     private Biblioteca biblioteca;

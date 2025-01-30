@@ -1,4 +1,4 @@
-package dominio;
+package com.biblioteca.dominio;
 
 import java.util.ArrayList;
 import java.util.List;

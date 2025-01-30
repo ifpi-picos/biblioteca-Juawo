@@ -1,6 +1,7 @@
-import dominio.Biblioteca;
-import dominio.Livro;
-import dominio.Usuario;
+package com.biblioteca;
+import com.biblioteca.dominio.Biblioteca;
+import com.biblioteca.dominio.Livro;
+import com.biblioteca.dominio.Usuario;
 
 public class App {
     public static void main(String[] args) {
