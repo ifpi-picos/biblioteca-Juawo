@@ -1,11 +1,11 @@
 package com.biblioteca.dominio;
 
 public class Livro {
-    private String autor;
     private String titulo;
+    private String autor;
     private String editora;
     private int ano;
-    private boolean isEmprestado;
+    private boolean isEmprestado = false;
 
     public Livro(String titulo, String autor, String editora, int ano) {
         this.titulo = titulo;
