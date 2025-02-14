@@ -4,29 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
+    private int id_usuario;
+    
     private String nome;
     private String cpf;
     private String email;
-    private static int idCount = 1;
-    private int id;
     private List<Emprestimo> historicoEmprestimos;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    
     public Usuario(String nome, String cpf, String email) {
-        this.id = idCount++;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.historicoEmprestimos = new ArrayList<>();
     }
-
+    
+    public int getId_usuario() {
+            return id_usuario;
+    }
+    
+    public void setId_usuario(int id_usuario) {
+            this.id_usuario = id_usuario;
+    }
+    
     public String getNome() {
         return nome;
     }

@@ -1,5 +1,6 @@
 package com.biblioteca.Dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,33 +9,55 @@ import java.sql.Statement;
 import com.biblioteca.dominio.Livro;
 
 public class LivroDao {
-    private ConexaoBD connection;
+    private Connection connection;
 
-    public LivroDao(ConexaoBD connection){
+    public LivroDao(Connection connection){
         this.connection = connection;
     }
     
-    public void cadastrarLivro(Livro livro) {
+    public void cadastrarLivro(Livro livro) throws SQLException {
         String sql = "INSERT INTO livros (titulo, autor, editora, ano, emprestado) VALUES (?, ?,?,?, FALSE)";
 
             try {
-            PreparedStatement statment = connection.conectarBanco().prepareStatement(sql);
+            PreparedStatement statment = connection.prepareStatement(sql);
             statment.setString(1,livro.getTitulo());
             statment.setString(2, livro.getAutor());
             statment.setString(3, livro.getEditora());
             statment.setInt(4, livro.getAno());
             statment.executeUpdate();
             System.out.println("Livro Adicionado com sucesso!");
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            System.out.println("Erro ao cadastrar livo : " + e.getMessage());
+        }
+    }
+
+    public void removerLivro(Livro livro) throws SQLException {
+        String sql = "";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
     
-    public void listarLivros(){
+    public void atualizarLivro(Livro livro) throws SQLException {
+        String sql = "";
+        
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+        
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void listarLivros() throws SQLException {
         System.out.println("---- Livros da Biblioteca ----");
         String sql = "SELECT titulo FROM livros";
         try{
-            Statement statement = connection.conectarBanco().createStatement();
+            Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
             while (result.next()) {
                 System.out.println("Titulo : " + result.getString("titulo"));
@@ -44,12 +67,12 @@ public class LivroDao {
         }
     }
 
-    public void listarLivroStatus(){
+    public void listarLivroStatus() throws SQLException {
         System.out.println("Lista Livros por Status");
         String sql = "SELECT titulo, emprestado FROM livros";
 
         try {
-            Statement statement = connection.conectarBanco().createStatement();
+            Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
             while (result.next()) {
                 if (result.getBoolean("emprestado") == false) {
@@ -63,19 +86,30 @@ public class LivroDao {
         }
     }
 
-    public void pesquisarLivroTitulo(String titulo){
+    public Livro pesquisarLivroTitulo(String titulo) throws SQLException {
         String sql = "SELECT titulo FROM livros WHERE titulo = ? ";
         try {
-            PreparedStatement statement = connection.conectarBanco().prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, titulo);
             ResultSet result = statement.executeQuery();
             
-            while (result.next()) {
-                System.out.println("Titulo : " + result.getString("titulo"));
+            if (result.next()) {
+                while (result.next()) {
+                    Livro livro = new Livro(
+                        result.getString("titulo"),
+                        result.getString("autor"),
+                        result.getString("editora"),
+                        result.getInt("ano")
+                        );
+                    livro.setId_livro(result.getInt("id"));
+                    return livro;
+                }
             }
         } catch(SQLException e){
             e.printStackTrace();
         }
+
+        return null;
     }
 
 

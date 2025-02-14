@@ -6,19 +6,48 @@ import com.biblioteca.dominio.Notificacao.INotificacao;
 import com.biblioteca.dominio.Notificacao.NotificaoEmail;
 
 public class Emprestimo {
+    private int id_emprestimo;
+    private int id_usuario;
+    private int id_livro;
+    
+    
     private Usuario usuario;
     private Livro livro;
     private LocalDate dataEmprestimo;
     private LocalDate dataDevolucao;
     private Biblioteca biblioteca;
-
     
-    public Emprestimo(Biblioteca biblioteca, Usuario usuario, Livro livro) {
-        this.usuario = usuario;
-        this.livro = livro;
+    
+    public Emprestimo(Biblioteca biblioteca, int id_usuario, int id_livro) {
+        this.id_usuario = id_usuario;
+        this.id_livro = id_livro;
         this.dataEmprestimo = LocalDate.now();
         this.dataDevolucao = dataEmprestimo.plusDays(7);
         this.biblioteca = biblioteca;
+    }
+    
+    public int getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
+    }
+
+    public int getId_livro() {
+        return id_livro;
+    }
+
+    public void setId_livro(int id_livro) {
+        this.id_livro = id_livro;
+    }
+    
+    public int getId_emprestimo() {
+        return id_emprestimo;
+    }
+
+    public void setId_emprestimo(int id_emprestimo) {
+        this.id_emprestimo = id_emprestimo;
     }
     
     public LocalDate getDataEmprestimo() {
@@ -74,5 +103,6 @@ public class Emprestimo {
         String texto = "Devolução do livro : " + livro.getTitulo() + " realizado com sucesso!";
         INotificacao notificacao = new NotificaoEmail();
         notificacao.enviarNotificacao(texto,usuario);
+
     }
 }

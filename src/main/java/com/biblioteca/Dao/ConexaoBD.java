@@ -18,7 +18,7 @@ public class ConexaoBD {
                 return connection;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao conectar banco : " + e.getMessage());
         }
         return null;
     }

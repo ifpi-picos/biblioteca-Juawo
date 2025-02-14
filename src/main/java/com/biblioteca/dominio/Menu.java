@@ -88,7 +88,7 @@ public class Menu {
                         break;
                     }
 
-                    Emprestimo emprestimo = new Emprestimo(biblioteca, userEmprestimo, livroPesquisado);
+                    Emprestimo emprestimo = new Emprestimo(biblioteca, 1, 2);
                     emprestimo.realizarEmprestimo();
                     break;
 
