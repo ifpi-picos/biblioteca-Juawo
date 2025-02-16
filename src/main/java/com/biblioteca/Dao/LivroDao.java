@@ -43,11 +43,17 @@ public class LivroDao {
     }
     
     public void atualizarLivro(Livro livro) throws SQLException {
-        String sql = "";
+        String sql = "UPDATE livros SET titulo = ?, autor = ?, editora = ?, ano = ?, emprestado = ? WHERE id = ?";
         
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
-        
+            statement.setString(1, livro.getTitulo());
+            statement.setString(2, livro.getAutor());
+            statement.setString(3, livro.getEditora());
+            statement.setInt(4, livro.getAno());
+            statement.setBoolean(5, livro.isEmprestado());
+            statement.setInt(6, livro.getId_livro());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -87,7 +93,7 @@ public class LivroDao {
     }
 
     public Livro pesquisarLivroTitulo(String titulo) throws SQLException {
-        String sql = "SELECT titulo FROM livros WHERE titulo = ? ";
+        String sql = "SELECT id, titulo, autor, editora, ano FROM livros WHERE titulo = ? ";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, titulo);
@@ -106,11 +112,33 @@ public class LivroDao {
                 }
             }
         } catch(SQLException e){
+            System.out.println("Erro ao pesquisar livro por titulo : " + e.getMessage());
             e.printStackTrace();
         }
 
         return null;
     }
 
-
+    public Livro pesquisarLivroId(int id) throws SQLException {
+        String sql = "SELECT titulo, autor, editora, ano FROM livros WHERE id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                Livro livro = new Livro(
+                    result.getString("titulo"),
+                    result.getString("autor"),
+                    result.getString("editora"),
+                    result.getInt("ano")
+                );
+                livro.setId_livro(id);
+                return livro;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao pesquisar livro por id : " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -22,7 +22,7 @@ public class App {
         LivroDao livroDao = new LivroDao(conn.conectarBanco());
         UsuarioDao userDao = new UsuarioDao(conn.conectarBanco());
 
-        userDao.cadastrarUsuario(user1);
+        // userDao.cadastrarUsuario(user1);
 
         Usuario userPesq = userDao.pesquisarUsuarioCpf("12345678910");
         Livro livroPesq = livroDao.pesquisarLivroTitulo("livro5");
@@ -30,8 +30,8 @@ public class App {
         Emprestimo emprestimo = new Emprestimo(biblioteca, userPesq.getId_usuario(), livroPesq.getId_livro());
 
         EmprestimoDao emp = new EmprestimoDao(conn.conectarBanco());
-
-        emp.cadastrarEmprestimo(emprestimo);
+        // emp.cadastrarEmprestimo(emprestimo);
+        emp.devolverEmprestimo(emprestimo);
         
         // Menu menu = new Menu(biblioteca);
         // menu.iniciarMenu();

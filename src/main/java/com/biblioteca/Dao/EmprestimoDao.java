@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Date;
 
 import com.biblioteca.dominio.Emprestimo;
+import com.biblioteca.dominio.Livro;
 
 public class EmprestimoDao {
     private Connection connection;
@@ -24,9 +25,36 @@ public class EmprestimoDao {
             statement.setDate(3, Date.valueOf(emprestimo.getDataEmprestimo()));
             statement.setDate(4, Date.valueOf(emprestimo.getDataDevolucao()));
             statement.executeUpdate();
+
+            Livro livroAtt = new LivroDao(connection).pesquisarLivroId(emprestimo.getId_livro());
+            livroAtt.setEmprestado(true);
+            LivroDao livroDao = new LivroDao(connection);
+            livroDao.atualizarLivro(livroAtt);
+            
             System.out.println("Emprestimo cadastrado com sucesso!");
         } catch (SQLException e) {
             System.out.println("Erro ao cadastrar emprestimo " + e.getMessage());
         }
     }
+
+    public void devolverEmprestimo(Emprestimo emprestimo){
+       String sql = "UPDATE emprestimos SET devolvido = TRUE WHERE id = ?";
+       try {
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, emprestimo.getId_emprestimo());
+        statement.executeUpdate();
+
+        Livro livroAtt = new LivroDao(connection).pesquisarLivroId(emprestimo.getId_livro());
+        livroAtt.setEmprestado(false);
+        LivroDao livroDao = new LivroDao(connection);
+        livroDao.atualizarLivro(livroAtt);
+        System.out.println("Emprestimo devolvido com sucesso!");
+
+       } catch (Exception e) {
+        System.out.println("Erro ao devolver emprestimo " + e.getMessage());
+        e.printStackTrace();
+       }
+    }
+
 }

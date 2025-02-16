@@ -80,4 +80,30 @@ public class UsuarioDao {
         return null;
     }
 
+    public Usuario pesquisarUsuarioId(int ind){
+        String sql = "SELECT id, nome, cpf, email FROM usuarios WHERE id = ?";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1,ind);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                Usuario user = new Usuario(
+                    result.getString("nome"),
+                    result.getString("cpf"),
+                    result.getString("email")
+                );
+                user.setId_usuario(ind);
+                return user;
+            }
+        } catch (SQLException e){
+            System.out.println("Erro ao tentar procurar por id " + e.getMessage());
+        }
+
+        System.out.println("Usuário não encontrado, tente novamente.");
+        return null;
+    }
+
 }
