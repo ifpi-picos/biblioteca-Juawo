@@ -28,10 +28,11 @@ public class App {
         Livro livroPesq = livroDao.pesquisarLivroTitulo("livro5");
 
         Emprestimo emprestimo = new Emprestimo(biblioteca, userPesq.getId_usuario(), livroPesq.getId_livro());
-
-        EmprestimoDao emp = new EmprestimoDao(conn.conectarBanco());
+        
+        EmprestimoDao empDao = new EmprestimoDao(conn.conectarBanco());
+        emprestimo = empDao.pesquisarEmprestimo(emprestimo.getId_usuario(), emprestimo.getId_livro());
         // emp.cadastrarEmprestimo(emprestimo);
-        emp.devolverEmprestimo(emprestimo);
+        empDao.devolverEmprestimo(emprestimo);
         
         // Menu menu = new Menu(biblioteca);
         // menu.iniciarMenu();

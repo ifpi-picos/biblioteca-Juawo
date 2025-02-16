@@ -14,6 +14,7 @@ public class Emprestimo {
     private Livro livro;
     private LocalDate dataEmprestimo;
     private LocalDate dataDevolucao;
+    
     private Boolean devolvido = false;
 
     private Biblioteca biblioteca;
@@ -46,23 +47,31 @@ public class Emprestimo {
     public int getId_emprestimo() {
         return id_emprestimo;
     }
-
+    
     public void setId_emprestimo(int id_emprestimo) {
         this.id_emprestimo = id_emprestimo;
     }
-
+    
     public LocalDate getDataEmprestimo() {
         return dataEmprestimo;
     }
-
+    
     public LocalDate getDataDevolucao() {
         return dataDevolucao;
     }
-
+    
     public String getTituloLivroEmprestado() {
         return livro.getTitulo();
     }
+    
+    public void setDataEmprestimo(LocalDate dataEmprestimo) {
+        this.dataEmprestimo = dataEmprestimo;
+    }
 
+    public void setDataDevolucao(LocalDate dataDevolucao) {
+        this.dataDevolucao = dataDevolucao;
+    }
+    
     public Boolean getDevolvido() {
         return devolvido;
     }

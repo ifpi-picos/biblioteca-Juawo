@@ -2,6 +2,7 @@ package com.biblioteca.Dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 
@@ -30,7 +31,7 @@ public class EmprestimoDao {
             livroAtt.setEmprestado(true);
             LivroDao livroDao = new LivroDao(connection);
             livroDao.atualizarLivro(livroAtt);
-            
+
             System.out.println("Emprestimo cadastrado com sucesso!");
         } catch (SQLException e) {
             System.out.println("Erro ao cadastrar emprestimo " + e.getMessage());
@@ -55,6 +56,28 @@ public class EmprestimoDao {
         System.out.println("Erro ao devolver emprestimo " + e.getMessage());
         e.printStackTrace();
        }
+    }
+
+    public Emprestimo pesquisarEmprestimo(int id_usuario, int id_livro) throws SQLException{
+        String sql = "SELECT id, id_usuario, id_livro, data_emprestimo, data_devolucao, devolvido FROM emprestimos WHERE id_usuario = ? AND id_livro = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id_usuario);
+            statement.setInt(2, id_livro);
+            ResultSet resultSet = statement.executeQuery();
+            
+            if (resultSet.next()) {
+                Emprestimo emprestimo = new Emprestimo(null, id_usuario, id_livro);
+                emprestimo.setId_emprestimo(statement.getResultSet().getInt("id"));
+                emprestimo.setDataEmprestimo(statement.getResultSet().getDate("data_emprestimo").toLocalDate());
+                emprestimo.setDataDevolucao(statement.getResultSet().getDate("data_devolucao").toLocalDate());
+                emprestimo.setDevolvido(statement.getResultSet().getBoolean("devolvido"));
+                return emprestimo;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao pesquisar emprestimo " + e.getMessage());
+        }
+        return null;   
     }
 
 }
