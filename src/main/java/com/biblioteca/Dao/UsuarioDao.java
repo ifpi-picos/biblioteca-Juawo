@@ -32,23 +32,32 @@ public class UsuarioDao {
     }
 
     public void removerUsuario(Usuario usuario) throws SQLException {
-        String sql = "";
+        String sql = "DELETE FROM usuarios WHERE id = ?";
 
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
-
+            statement.setInt(1,usuario.getId_usuario());
+            statement.executeUpdate();
+            System.out.println("Usuário removido com sucesso!");
         } catch (SQLException e) {
+            System.out.println("Erro ao remover usuário " + e.getMessage());
             e.printStackTrace();
         }
     }
     
     public void atualizarUsuario(Usuario usuario) throws SQLException {
-        String sql = "";
+        String sql = "UPDATE usuarios SET nome = ?, cpf = ?, email = ? WHERE id = ?";
         
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
-        
+            statement.setString(1, usuario.getNome());
+            statement.setString(2, usuario.getCpf());
+            statement.setString(3, usuario.getEmail());
+            statement.executeUpdate();
+
+            System.out.println("Usuário atualizado com sucesso!");
         } catch (SQLException e) {
+            System.out.println("Erro ao atualizar usuário " + e.getMessage());
             e.printStackTrace();
         }
     }

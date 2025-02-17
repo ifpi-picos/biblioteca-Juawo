@@ -32,12 +32,16 @@ public class LivroDao {
     }
 
     public void removerLivro(Livro livro) throws SQLException {
-        String sql = "";
+        String sql = "DELETE FROM livros WHERE id = ?";
 
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, livro.getId_livro());
+            statement.executeUpdate();
+            System.out.println("Livro removido com sucesso!");
 
         } catch (SQLException e) {
+            System.out.println("Erro ao remover livro : " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -100,7 +104,6 @@ public class LivroDao {
             ResultSet result = statement.executeQuery();
             
             if (result.next()) {
-                while (result.next()) {
                     Livro livro = new Livro(
                         result.getString("titulo"),
                         result.getString("autor"),
@@ -108,14 +111,14 @@ public class LivroDao {
                         result.getInt("ano")
                         );
                     livro.setId_livro(result.getInt("id"));
+                    System.out.println("Livro encontrado por titulo!");
                     return livro;
-                }
             }
         } catch(SQLException e){
             System.out.println("Erro ao pesquisar livro por titulo : " + e.getMessage());
             e.printStackTrace();
         }
-
+        System.out.println("Livro não encontrado por titulo, tente novamente.");
         return null;
     }
 
@@ -133,12 +136,14 @@ public class LivroDao {
                     result.getInt("ano")
                 );
                 livro.setId_livro(id);
+                System.out.println("Livro encontrado por id!");
                 return livro;
             }
         } catch (SQLException e) {
             System.out.println("Erro ao pesquisar livro por id : " + e.getMessage());
             e.printStackTrace();
         }
+        System.out.println("Livro não encontrado por id, tente novamente.");
         return null;
     }
 }

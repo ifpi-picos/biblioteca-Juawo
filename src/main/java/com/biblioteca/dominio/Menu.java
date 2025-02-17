@@ -1,11 +1,19 @@
 package com.biblioteca.dominio;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Menu {
-    private Biblioteca biblioteca;
+import com.biblioteca.Dao.UsuarioDao;
+import com.biblioteca.Dao.LivroDao;
+import com.biblioteca.Dao.EmprestimoDao;
 
-    public Menu(Biblioteca biblioteca) {
-        this.biblioteca = biblioteca;
+public class Menu {
+    private Scanner scanner = new Scanner(System.in);
+    private Connection connection;
+
+    public Menu(Connection connection) {
+        this.connection = connection;
     }
 
     public void menuText() {
@@ -14,9 +22,118 @@ public class Menu {
                 "\n 1 - Cadastrar Usuário \n 2 - Cadastrar Livro \n 3 - Listar todos os Livros \n 4 - Listar Livros Emprestados e Disponíveis \n 5 - Listar Histórico de Empréstimo de Usuário \n 6 - Realizar Empréstimo de Livro \n 7 - Devolver Livro Emprestado \n 0 - Sair");
     }
 
-    public void iniciarMenu() {
+    public void cadastrarUsuario() throws SQLException {
+        System.out.println("Digite o nome do usuário:");
+        String nome = scanner.next();
+
+        System.out.println("Digite o CPF do usuário:");
+        String cpf = scanner.next();
+
+        System.out.println("Digite o e-mail do usuário:");
+        String email = scanner.next();
+
+        Usuario usuario = new Usuario(nome, cpf, email);
+        UsuarioDao usuarioDao = new UsuarioDao(connection);
+        usuarioDao.cadastrarUsuario(usuario);
+    }
+
+    public void cadastrarLivro() throws SQLException {
+        System.out.println("Digite o titulo do Livro : ");
+        String titulo = scanner.next();
+
+        System.out.println("Digite o nome do Autor : ");
+        String nomeAutor = scanner.next();
+
+        System.out.println("Digite o nome da Editora : ");
+        String nomeEditora = scanner.next();
+
+        System.out.println("Digite o Ano de Publicação : ");
+        int anoPublicacao = scanner.nextInt();
+
+        Livro novoLivro = new Livro(titulo, nomeAutor, nomeEditora, anoPublicacao);
+        LivroDao livroDao = new LivroDao(connection);
+        livroDao.cadastrarLivro(novoLivro);
+    }
+
+    public void listarLivros() throws SQLException {
+        LivroDao livroDao = new LivroDao(connection);
+        livroDao.listarLivros();
+    }
+
+    public void listarLivrosStatus() throws SQLException {
+        LivroDao livroDao = new LivroDao(connection);
+        livroDao.listarLivroStatus();
+    }
+
+    public void listarHistoricoEmprestimos() throws SQLException {
+        System.out.println("Digite o CPF do usuário:");
+        String cpf = scanner.next();
+        UsuarioDao usuarioDao = new UsuarioDao(connection);
+        Usuario usuario = usuarioDao.pesquisarUsuarioCpf(cpf);
+        if (usuario != null) {
+            usuario.listarHistoricoEmprestimos();
+        } else {
+            System.out.println("Usuário não encontrado.");
+        }
+    }
+
+    public void realizarEmprestimo() throws SQLException {
+        System.out.println("Digite o título do livro que deseja pegar emprestado : ");
+        String tituloPesquisa = scanner.next();
+
+        LivroDao livroDao = new LivroDao(connection);
+        Livro livroPesquisado = livroDao.pesquisarLivroTitulo(tituloPesquisa);
+
+        System.out.println("Digite o CPF do usuário:");
+        String cpfPesquisadoEmprestimo = scanner.next();
+        UsuarioDao usuarioDao = new UsuarioDao(connection);
+        Usuario userEmprestimo = usuarioDao.pesquisarUsuarioCpf(cpfPesquisadoEmprestimo);
+
+        if (userEmprestimo == null) {
+            System.out.println("Usuário não encontrado.");
+            return;
+        }
+        if (livroPesquisado == null) {
+            System.out.println("Livro não encontrado.");
+            return;
+        }
+
+        Emprestimo emprestimo = new Emprestimo(null, userEmprestimo.getId_usuario(), livroPesquisado.getId_livro());
+        EmprestimoDao emprestimoDao = new EmprestimoDao(connection);
+        emprestimoDao.cadastrarEmprestimo(emprestimo);
+    }
+
+    public void devolverEmprestimo() throws SQLException {
+        System.out.println("Digite o título do livro que deseja devolver : ");
+        String tituloPesquisaDevolucao = scanner.next();
+        LivroDao livroDao = new LivroDao(connection);
+        Livro livroPesquisadoDevolucao = livroDao.pesquisarLivroTitulo(tituloPesquisaDevolucao);
+
+        System.out.println("Digite o CPF do usuário:");
+        String cpfPesquisadoDevolucao = scanner.next();
+        UsuarioDao usuarioDao = new UsuarioDao(connection);
+        Usuario userDevolucao = usuarioDao.pesquisarUsuarioCpf(cpfPesquisadoDevolucao);
+
+        if (userDevolucao == null) {
+            System.out.println("Usuário não encontrado.");
+            return;
+        }
+        if (livroPesquisadoDevolucao == null) {
+            System.out.println("Livro não encontrado.");
+            return;
+        }
+
+        EmprestimoDao emprestimoDao = new EmprestimoDao(connection);
+        Emprestimo emprestimo = emprestimoDao.buscarEmprestimoPorUsuarioELivro(userDevolucao.getId_usuario(), livroPesquisadoDevolucao.getId_livro());
+        if (emprestimo != null) {
+            emprestimoDao.devolverEmprestimo(emprestimo);
+        } else {
+            System.out.println("Empréstimo não encontrado.");
+        }
+    }
+
+    public void iniciarMenu() throws SQLException {
         boolean isLoop = true;
-        Scanner scanner = new Scanner(System.in);
 
         while (isLoop) {
             menuText();
@@ -24,102 +141,42 @@ public class Menu {
             int opcao = scanner.nextInt();
             switch (opcao) {
                 case 1:
-                    System.out.println("Digite o nome do usuário:");
-                    String nome = scanner.next();
-
-                    System.out.println("Digite o CPF do usuário:");
-                    String cpf = scanner.next();
-
-                    System.out.println("Digite o e-mail do usuário:");
-                    String email = scanner.next();
-
-                    Usuario usuario = new Usuario(nome, cpf, email);
-                    biblioteca.cadastrarUsuario(usuario);
-
+                    cadastrarUsuario();
                     break;
-
                 case 2:
-                    System.out.println("Digite o titulo do Livro : ");
-                    String tituloLivro = scanner.next();
-
-                    System.out.println("Digite o nome do Autor : ");
-                    String nomeAutor = scanner.next();
-
-                    System.out.println("Digite o nome da Editora : ");
-                    String nomeEditora = scanner.next();
-
-                    System.out.println("Digite o Ano de Publicação : ");
-                    int anoPublicacao = scanner.nextInt();
-
-                    Livro novoLivro = new Livro(tituloLivro, nomeAutor, nomeEditora, anoPublicacao);
-                    biblioteca.cadastrarLivro(novoLivro);
+                    cadastrarLivro();
                     break;
                 case 3:
-                    biblioteca.listarLivros();
+                    listarLivros();
                     break;
                 case 4:
-                    biblioteca.listarLivrosStatus();
+                    listarLivrosStatus();
                     break;
                 case 5:
-                    // Sistema de Senha pra verificar o usuário
-                    System.out.println("Digite o CPF do usuário:");
-                    String cpfPesquisadoHistorico = scanner.next();
-                    Usuario userHistorico = biblioteca.pesquisarUsuarioCpf(cpfPesquisadoHistorico);
-                    userHistorico.listarHistoricoEmprestimos();
+                    listarHistoricoEmprestimos();
                     break;
                 case 6:
-                    // Sistema de busca por Chave para escolher o usuário e poder realizar o
-                    // empréstimo no nome dele
-                    System.out.println("Digite o  título do livro que deseja pegar emprestado : ");
-                    String tituloPesquisa = scanner.next();
-
-                    Livro livroPesquisado = biblioteca.pesquisarLivroTitulo(tituloPesquisa);
-                    System.out.println("Digite o CPF do usuário:");
-
-                    String cpfPesquisadoEmprestimo = scanner.next();
-                    Usuario userEmprestimo = biblioteca.pesquisarUsuarioCpf(cpfPesquisadoEmprestimo);
-
-                    if (userEmprestimo == null) {
-                        System.out.println("User Null");
-                        break;
-                    }
-                    if (livroPesquisado == null) {
-                        System.out.println("Livro Null");
-                        break;
-                    }
-
-                    Emprestimo emprestimo = new Emprestimo(biblioteca, 1, 2);
-                    emprestimo.realizarEmprestimo();
+                    realizarEmprestimo();
                     break;
-
                 case 7:
-                    // Sistema de busca por Chave para escolher o usuário e poder realizar a
-                    // devolução no nome dele
-                    System.out.println("Digite o  título do livro que deseja pegar emprestado : ");
-                    String tituloPesquisaDevolucao = scanner.next();
-                    Livro livroPesquisadoDevolucao = biblioteca.pesquisarLivroTitulo(tituloPesquisaDevolucao);
-                    System.out.println("Digite o CPF do usuário:");
-                    String cpfPesquisadoDevolucao = scanner.next();
-                    Usuario userDevolucao = biblioteca.pesquisarUsuarioCpf(cpfPesquisadoDevolucao);
-                    if (userDevolucao == null) {
-                        return;
-                    }
-                    if (livroPesquisadoDevolucao == null) {
-                        return;
-                    }
-                    Emprestimo devolucao = new Emprestimo(biblioteca, userDevolucao, livroPesquisadoDevolucao);
-                    devolucao.devolverEmprestimo();
+                    devolverEmprestimo();
                     break;
                 case 0:
                     System.out.println("Obrigado por usar nosso sistema!");
                     isLoop = false;
                     break;
-
                 default:
                     System.out.println("Opção inválida! Tente novamente");
                     break;
             }
         }
         scanner.close();
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao fechar a conexão com o banco de dados: " + e.getMessage());
+        }
     }
 }
