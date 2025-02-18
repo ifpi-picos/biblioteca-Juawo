@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.biblioteca.dominio.Emprestimo;
 import com.biblioteca.dominio.Usuario;
 
 public class UsuarioDao {
@@ -112,6 +115,34 @@ public class UsuarioDao {
         }
 
         System.out.println("Usuário não encontrado, tente novamente.");
+        return null;
+    }
+
+    public List<Emprestimo> listarHistoricoEmprestimos(Usuario usuario) throws SQLException {
+        String sql = "SELECT id, id_usuario, id_livro, data_emprestimo, data_devolucao, devolvido FROM emprestimos WHERE id_usuario = ?";
+        List<Emprestimo> historicoEmprestimos = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, usuario.getId_usuario());
+            ResultSet result = statement.executeQuery();
+            if(result.next()){
+                Emprestimo emprestimo = new Emprestimo(null,
+                result.getInt("id_usuario"),
+                result.getInt("id_livro"));
+                emprestimo.setId_emprestimo(result.getInt("id"));
+                emprestimo.setDataEmprestimo(result.getDate("data_emprestimo").toLocalDate());
+                emprestimo.setDataDevolucao(result.getDate("data_devolucao").toLocalDate());
+                emprestimo.setDevolvido(result.getBoolean("devolvido"));
+                historicoEmprestimos.add(emprestimo);
+            }
+            return historicoEmprestimos;
+
+        } catch(SQLException e){
+            System.out.println("Erro ao listar historico de emprestimos " + e.getMessage());
+            e.printStackTrace();
+        }
+
         return null;
     }
 

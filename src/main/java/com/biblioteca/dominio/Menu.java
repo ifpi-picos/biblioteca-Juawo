@@ -2,6 +2,7 @@ package com.biblioteca.dominio;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 import com.biblioteca.Dao.UsuarioDao;
@@ -24,13 +25,13 @@ public class Menu {
 
     public void cadastrarUsuario() throws SQLException {
         System.out.println("Digite o nome do usuário:");
-        String nome = scanner.next();
+        String nome = scanner.nextLine();
 
         System.out.println("Digite o CPF do usuário:");
-        String cpf = scanner.next();
+        String cpf = scanner.nextLine();
 
         System.out.println("Digite o e-mail do usuário:");
-        String email = scanner.next();
+        String email = scanner.nextLine();
 
         Usuario usuario = new Usuario(nome, cpf, email);
         UsuarioDao usuarioDao = new UsuarioDao(connection);
@@ -39,13 +40,13 @@ public class Menu {
 
     public void cadastrarLivro() throws SQLException {
         System.out.println("Digite o titulo do Livro : ");
-        String titulo = scanner.next();
+        String titulo = scanner.nextLine();
 
         System.out.println("Digite o nome do Autor : ");
-        String nomeAutor = scanner.next();
+        String nomeAutor = scanner.nextLine();
 
         System.out.println("Digite o nome da Editora : ");
-        String nomeEditora = scanner.next();
+        String nomeEditora = scanner.nextLine();
 
         System.out.println("Digite o Ano de Publicação : ");
         int anoPublicacao = scanner.nextInt();
@@ -67,25 +68,37 @@ public class Menu {
 
     public void listarHistoricoEmprestimos() throws SQLException {
         System.out.println("Digite o CPF do usuário:");
-        String cpf = scanner.next();
+        String cpf = scanner.nextLine();
         UsuarioDao usuarioDao = new UsuarioDao(connection);
         Usuario usuario = usuarioDao.pesquisarUsuarioCpf(cpf);
         if (usuario != null) {
-            usuario.listarHistoricoEmprestimos();
+            printarHistoricoEmprestimos(usuario, usuarioDao.listarHistoricoEmprestimos(usuario));
         } else {
             System.out.println("Usuário não encontrado.");
         }
     }
 
+    public void printarHistoricoEmprestimos(Usuario usuario, List<Emprestimo> emprestimos) throws SQLException {
+        System.out.println(" -- Histórico de Empréstimos do usuário " + usuario.getNome());
+        LivroDao livroDao = new LivroDao((connection));
+        for (Emprestimo emprestimo : emprestimos) {
+            System.out.println("Título do Livro Emprestado -- " + livroDao.pesquisarLivroId(emprestimo.getId_livro()).getTitulo());
+            System.out.println("   - Data do Empréstimo -- " + emprestimo.getDataEmprestimo());
+            System.out.println("   - Data de Devolução -- " + emprestimo.getDataDevolucao());
+            System.out.println("   - Status Devolução -- " + emprestimo.getDevolvido());
+            System.out.println(" \n");
+        }
+    }
+
     public void realizarEmprestimo() throws SQLException {
         System.out.println("Digite o título do livro que deseja pegar emprestado : ");
-        String tituloPesquisa = scanner.next();
+        String tituloPesquisa = scanner.nextLine();
 
         LivroDao livroDao = new LivroDao(connection);
         Livro livroPesquisado = livroDao.pesquisarLivroTitulo(tituloPesquisa);
 
         System.out.println("Digite o CPF do usuário:");
-        String cpfPesquisadoEmprestimo = scanner.next();
+        String cpfPesquisadoEmprestimo = scanner.nextLine();
         UsuarioDao usuarioDao = new UsuarioDao(connection);
         Usuario userEmprestimo = usuarioDao.pesquisarUsuarioCpf(cpfPesquisadoEmprestimo);
 
@@ -105,12 +118,12 @@ public class Menu {
 
     public void devolverEmprestimo() throws SQLException {
         System.out.println("Digite o título do livro que deseja devolver : ");
-        String tituloPesquisaDevolucao = scanner.next();
+        String tituloPesquisaDevolucao = scanner.nextLine();
         LivroDao livroDao = new LivroDao(connection);
         Livro livroPesquisadoDevolucao = livroDao.pesquisarLivroTitulo(tituloPesquisaDevolucao);
 
         System.out.println("Digite o CPF do usuário:");
-        String cpfPesquisadoDevolucao = scanner.next();
+        String cpfPesquisadoDevolucao = scanner.nextLine();
         UsuarioDao usuarioDao = new UsuarioDao(connection);
         Usuario userDevolucao = usuarioDao.pesquisarUsuarioCpf(cpfPesquisadoDevolucao);
 
@@ -139,6 +152,7 @@ public class Menu {
             menuText();
             System.out.println("Escolha uma opção : ");
             int opcao = scanner.nextInt();
+            scanner.nextLine();
             switch (opcao) {
                 case 1:
                     cadastrarUsuario();
