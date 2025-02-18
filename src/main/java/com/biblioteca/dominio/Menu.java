@@ -99,8 +99,9 @@ public class Menu {
         String cpf = scanner.nextLine();
         UsuarioDao usuarioDao = new UsuarioDao(connection);
         Usuario usuario = usuarioDao.pesquisarUsuarioCpf(cpf);
+        EmprestimoDao emprestimoDao = new EmprestimoDao(connection);
         if (usuario != null) {
-            printarHistoricoEmprestimos(usuario, usuarioDao.listarHistoricoEmprestimos(usuario));
+            printarHistoricoEmprestimos(usuario, emprestimoDao.listarHistoricoEmprestimos(usuario));
         } else {
             System.out.println("Usuário não encontrado.");
         }
@@ -139,7 +140,7 @@ public class Menu {
             return;
         }
 
-        Emprestimo emprestimo = new Emprestimo(null, userEmprestimo.getId_usuario(), livroPesquisado.getId_livro());
+        Emprestimo emprestimo = new Emprestimo(userEmprestimo, livroPesquisado);
         EmprestimoDao emprestimoDao = new EmprestimoDao(connection);
         emprestimoDao.cadastrarEmprestimo(emprestimo);
     }
