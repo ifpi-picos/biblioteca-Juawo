@@ -5,22 +5,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.biblioteca.dominio.Livro;
 
 public class LivroDao {
     private Connection connection;
 
-    public LivroDao(Connection connection){
+    public LivroDao(Connection connection) {
         this.connection = connection;
     }
-    
+
     public void cadastrarLivro(Livro livro) throws SQLException {
         String sql = "INSERT INTO livros (titulo, autor, editora, ano, emprestado) VALUES (?, ?,?,?, FALSE)";
 
-            try {
+        try {
             PreparedStatement statment = connection.prepareStatement(sql);
-            statment.setString(1,livro.getTitulo());
+            statment.setString(1, livro.getTitulo());
             statment.setString(2, livro.getAutor());
             statment.setString(3, livro.getEditora());
             statment.setInt(4, livro.getAno());
@@ -45,10 +47,10 @@ public class LivroDao {
             e.printStackTrace();
         }
     }
-    
+
     public void atualizarLivro(Livro livro) throws SQLException {
         String sql = "UPDATE livros SET titulo = ?, autor = ?, editora = ?, ano = ?, emprestado = ? WHERE id = ?";
-        
+
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, livro.getTitulo());
@@ -62,38 +64,55 @@ public class LivroDao {
             e.printStackTrace();
         }
     }
-    
-    public void listarLivros() throws SQLException {
+
+    public List<Livro> listarLivros() throws SQLException {
         System.out.println("---- Livros da Biblioteca ----");
-        String sql = "SELECT titulo FROM livros";
-        try{
+        String sql = "SELECT id, titulo, autor, editora, ano FROM livros";
+        List<Livro> livros = new ArrayList<>();
+        try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
             while (result.next()) {
-                System.out.println("Titulo : " + result.getString("titulo"));
+                Livro livro = new Livro(
+                        result.getString("titulo"),
+                        result.getString("autor"),
+                        result.getString("editora"),
+                        result.getInt("ano"));
+                livro.setId_livro(result.getInt("id"));
+                livros.add(livro);
             }
+            return livros;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    public void listarLivroStatus() throws SQLException {
+    public List<Livro> listarLivroStatus() throws SQLException {
         System.out.println("Lista Livros por Status");
-        String sql = "SELECT titulo, emprestado FROM livros";
+        String sql = "SELECT id, titulo, autor, editora, ano, emprestado FROM livros";
+        List<Livro> livros = new ArrayList<>();
 
         try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
             while (result.next()) {
-                if (result.getBoolean("emprestado") == false) {
-                    System.out.println("Título : " + result.getString("titulo") + " | Status : Disponível");
-                } else {
-                    System.out.println("Título : " + result.getString("titulo") + " | Status : Emprestado");
-                }
+                Livro livro = new Livro(
+                    result.getString("titulo"),
+                    result.getString("autor"),
+                    result.getString("editora"),
+                    result.getInt("ano")
+                );
+                livro.setEmprestado(result.getBoolean("emprestado"));
+                livro.setId_livro(result.getInt("id"));
+                livros.add(livro);
             }
+            return livros;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public Livro pesquisarLivroTitulo(String titulo) throws SQLException {
@@ -102,19 +121,18 @@ public class LivroDao {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, titulo);
             ResultSet result = statement.executeQuery();
-            
+
             if (result.next()) {
-                    Livro livro = new Livro(
+                Livro livro = new Livro(
                         result.getString("titulo"),
                         result.getString("autor"),
                         result.getString("editora"),
-                        result.getInt("ano")
-                        );
-                    livro.setId_livro(result.getInt("id"));
-                    System.out.println("Livro encontrado por titulo!");
-                    return livro;
+                        result.getInt("ano"));
+                livro.setId_livro(result.getInt("id"));
+                System.out.println("Livro encontrado por titulo!");
+                return livro;
             }
-        } catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("Erro ao pesquisar livro por titulo : " + e.getMessage());
             e.printStackTrace();
         }
@@ -130,11 +148,10 @@ public class LivroDao {
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 Livro livro = new Livro(
-                    result.getString("titulo"),
-                    result.getString("autor"),
-                    result.getString("editora"),
-                    result.getInt("ano")
-                );
+                        result.getString("titulo"),
+                        result.getString("autor"),
+                        result.getString("editora"),
+                        result.getInt("ano"));
                 livro.setId_livro(id);
                 System.out.println("Livro encontrado por id!");
                 return livro;

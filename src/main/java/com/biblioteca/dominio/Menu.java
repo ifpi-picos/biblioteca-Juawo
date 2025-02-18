@@ -58,12 +58,40 @@ public class Menu {
 
     public void listarLivros() throws SQLException {
         LivroDao livroDao = new LivroDao(connection);
-        livroDao.listarLivros();
+        List<Livro> livros = livroDao.listarLivros();
+        for (Livro livro : livros) {
+            System.out.println("Título -- " + livro.getTitulo());
+            System.out.println("    Autor -- " + livro.getAutor());
+            System.out.println("    Editora -- " + livro.getEditora());
+            System.out.println("    Ano -- " + livro.getAno());
+            System.out.println(" \n");
+        }
     }
 
     public void listarLivrosStatus() throws SQLException {
         LivroDao livroDao = new LivroDao(connection);
-        livroDao.listarLivroStatus();
+        List<Livro> livros = livroDao.listarLivroStatus();
+        System.out.println("---- Livros Disponíveis ----");
+        for (Livro livro : livros) {
+            if (!livro.isEmprestado()) {
+                System.out.println("Título -- " + livro.getTitulo());
+                System.out.println("    Autor -- " + livro.getAutor());
+                System.out.println("    Editora -- " + livro.getEditora());
+                System.out.println("    Ano -- " + livro.getAno());
+                System.out.println(" \n");
+            }
+        }
+        System.out.println("---- Livros Emprestados ----");
+        for (Livro livro : livros) {
+            if (livro.isEmprestado()) {
+                System.out.println("Título -- " + livro.getTitulo());
+                System.out.println("    Autor -- " + livro.getAutor());
+                System.out.println("    Editora -- " + livro.getEditora());
+                System.out.println("    Ano -- " + livro.getAno());
+                System.out.println(" \n");
+                
+            }
+        }
     }
 
     public void listarHistoricoEmprestimos() throws SQLException {
